@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="dem_terrain">
+    <static>true</static>
+
+    <link name="terrain_link">
+      <pose>0 0 0 0 0 0</pose>
+
+      <!-- Simplified flat-box collision (Gazebo Classic cannot handle
+           dynamic-body-vs-detailed-trimesh collision reliably -- causes
+           flip/freefall bugs). Footprint 174.6 x 63.9m, relief ~1.43m,
+           centered at terrain mid-height so the box brackets the real
+           min/max elevation. -->
+      <collision name="terrain_collision">
+        <pose>0 0 0.715 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>174.6 63.9 1.43</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.9</mu>
+              <mu2>0.9</mu2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <kp>1e8</kp>
+              <kd>1</kd>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+
+      <!-- Full detailed DEM mesh kept for visuals + LiDAR ray-casting -->
+      <visual name="terrain_visual">
+        <geometry>
+          <mesh>
+            <uri>model://dem_terrain/meshes/terrain.obj</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

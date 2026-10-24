@@ -1,0 +1,23 @@
+# ROS and Python generated files
+build/
+install/
+log/
+__pycache__/
+*.py[cod]
+*.egg-info/
+symlink_install_manifest.txt
+.colcon/
+.venv/
+.pytest_cache/
+.idea/
+.vscode/
+.env
+# Raw dataset: acquire from the attributed upstream source
+src/Viz_shapefiles/orthophoto/
+# Experiment outputs: retain intentional published results under docs
+results/
+!src/p23_uav/results/
+!src/p23_uav/results/*.png
+*.bag
+*.db3
+*.mcap

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       CHASSIS + WHEELS
+       Depends on properties and macros defined in _macros.xacro.
+
+       Physical layout (heights from ground):
+         Ground           0.000 m
+         Axle / base_link 0.500 m  (= wheel_r)
+         Chassis top      2.100 m  (= wheel_r + chassis_h)
+  ================================================================ -->
+
+  <!-- Ground-plane projection origin, required by Nav2. -->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child  link="base_link"/>
+    <!-- shift up by wheel_r so base_link sits at axle height -->
+    <origin xyz="0 0 ${wheel_r}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Chassis body.
+       Origin at axle height, geometric centre of footprint.
+       Box visual/collision offset +Z by chassis_h/2 → chassis sits above axle. -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="-1.0 0 0.8" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://p23_robot_description/meshes/thorvald.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="light_grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${chassis_h/2.0}" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://p23_robot_description/meshes/thorvald.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <!-- CoM at chassis geometric centre, offset from base_link origin -->
+    <xacro:box_inertia m="${chassis_m}"
+                       x="${chassis_l}" y="${chassis_w}" z="${chassis_h}"
+                       oz="${chassis_h/2.0}"/>
+  </link>
+
+  <!-- ── Wheels ──────────────────────────────────────────────────────
+       x = ±wheelbase/2  (front +x, rear -x)
+       y = ±track/2      (left +y, right -y)
+       z = 0             (axle height = base_link origin)
+  -->
+  <xacro:wheel name="front_left"  x=" ${wheelbase/2.0}" y=" ${track/2.0}"/>
+  <xacro:wheel name="front_right" x=" ${wheelbase/2.0}" y="${-track/2.0}"/>
+  <xacro:wheel name="rear_left"   x="${-wheelbase/2.0}" y=" ${track/2.0}"/>
+  <xacro:wheel name="rear_right"  x="${-wheelbase/2.0}" y="${-track/2.0}"/>
+
+</robot>

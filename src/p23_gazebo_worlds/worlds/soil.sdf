@@ -1,0 +1,1439 @@
+<?xml version="1.0"?>
+<!--
+  P23 Agricultural UGV – Soil World
+  Gazebo Fortress (Ignition Gazebo 6) / SDF 1.8
+
+  Empty field with:
+    • Tilled-soil ground plane (200 × 200 m)
+    • Realistic directional sunlight + soft sky ambient
+    • Physics, UserCommands and SceneBroadcaster system plugins (minimum required)
+-->
+<sdf version="1.8">
+  <world name="soil_world">
+
+    <!-- ================================================================
+         SPHERICAL COORDINATES  –  georeference origin for NavSat sensors
+         Required for ignition-gazebo-navsat-system to convert the robot's
+         local ENU pose into lat/lon/alt. Without this tag, NavSat publishes
+         a fixed fix that does not change as the robot moves.
+         Arbitrary origin (example: a field near Lahore, Pakistan).
+    ================================================================ -->
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>50.6259768055</latitude_deg>
+      <longitude_deg>6.9836962966</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <!-- ================================================================
+         PHYSICS
+    ================================================================ -->
+    <physics name="4ms" type="ignored">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- ================================================================
+         IGNITION GAZEBO FORTRESS  –  REQUIRED SYSTEM PLUGINS
+    ================================================================ -->
+    <plugin filename="ignition-gazebo-physics-system"
+            name="ignition::gazebo::systems::Physics"/>
+
+    <plugin filename="ignition-gazebo-user-commands-system"
+            name="ignition::gazebo::systems::UserCommands"/>
+
+    <plugin filename="ignition-gazebo-scene-broadcaster-system"
+            name="ignition::gazebo::systems::SceneBroadcaster"/>
+
+    <!-- Contact detection (needed for wheel-ground interaction) -->
+    <plugin filename="ignition-gazebo-contact-system"
+            name="ignition::gazebo::systems::Contact"/>
+
+    <!-- IMU sensor simulation -->
+    <plugin filename="ignition-gazebo-imu-system"
+            name="ignition::gazebo::systems::Imu"/>
+
+    <!-- GNSS / NavSat sensor simulation -->
+    <plugin filename="ignition-gazebo-navsat-system"
+            name="ignition::gazebo::systems::NavSat"/>
+
+    <!-- Camera + GPU LiDAR sensor simulation (requires ogre2 render engine) -->
+    <plugin filename="ignition-gazebo-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!-- ================================================================
+         SCENE  (background sky colour + ambient)
+    ================================================================ -->
+    <scene>
+      <sky/>
+      <ambient>0.40 0.38 0.34 1.0</ambient>
+      <background>0.55 0.68 0.82 1.0</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <!-- ================================================================
+         LIGHTING  –  mid-morning agricultural sun
+    ================================================================ -->
+    <light name="sun" type="directional">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 20 0 0 0</pose>
+      <!-- warm sunlight -->
+      <diffuse>0.95 0.90 0.78 1.0</diffuse>
+      <specular>0.30 0.28 0.24 1.0</specular>
+      <!-- direction: slightly south-east, well above horizon -->
+      <direction>-0.50 0.20 -0.85</direction>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.90</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+    </light>
+
+    <!-- ================================================================
+         GROUND PLANE  –  field orthophoto (230613_ortho.png) as a flat
+         ground texture. Plane sized to the photo's real-world extent so
+         the image maps 1:1 without stretching.
+    ================================================================ -->
+    <model name="ground_plane">
+      <static>true</static>
+      <pose>84.355 14.4 0 0 0 0</pose>
+      <!-- <pose>84.5 14.35 0 0 0 0</pose> -->
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>175.14 63.93</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <!-- typical compacted soil friction -->
+                <mu>0.80</mu>
+                <mu2>0.60</mu2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>1e6</kp>
+                <kd>100</kd>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>175.14 63.93</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>1.0 1.0 1.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+            <specular>0.02 0.02 0.02 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>model://p23_gazebo_worlds/models/230607_ortho.png</albedo_map>
+                <roughness>0.9</roughness>
+                <metalness>0.0</metalness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- ================================================================
+         PLANT PLOTS  –  replicated UGV-LMI point cloud canopy meshes.
+         Each plant_plotXXX model represents one plant/crop type's canopy
+         scan, sized to a single 6 x 8 m plot footprint (local origin at
+         corner (0,0), local long axis +Y, centroid at local (3,4)).
+         It is instantiated once per physical plot cell it's assigned to,
+         each with its own pose: rotate by (that plot's long-edge heading
+         - 90 deg), then offset so the mesh's centroid (not its local
+         origin) lands on that plot's corner centroid (from
+         plot_corners_local.json) — same frame as the corner_marker_*
+         markers and this world's spherical_coordinates DATUM.
+    ================================================================ -->
+    <!-- plant_plot178 instances (all but p238 disabled) -->
+    <include>
+      <name>plant_plot178_p178</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot178</uri>
+      <pose>27.3304 30.4181 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot178_p198</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot178</uri>
+      <pose>26.4198 20.8614 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot178_p218</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot178</uri>
+      <pose>25.1107 7.1236 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot178_p238</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot178</uri>
+      <pose>24.2000 -2.4331 -0.0500 0 0 -0.095003</pose>
+    </include>
+
+    <!-- plant_plot177 instances (disabled) -->
+
+    <include>
+      <name>plant_plot177_p174</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>60.7789 27.2308 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p175</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>53.0141 27.9707 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p176</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>44.0547 28.8245 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p177</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>36.2898 29.5644 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p194</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>59.8682 17.6741 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p195</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>52.1034 18.4140 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p196</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>43.1440 19.2678 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p197</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>35.3792 20.0077 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p214</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>58.5592 3.9363 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p215</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>50.7943 4.6763 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p216</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>41.8349 5.5300 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p217</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>34.0701 6.2699 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p234</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>57.6485 -5.6204 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p235</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>49.8837 -4.8805 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p236</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>40.9243 -4.0267 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot177_p237</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot177</uri>
+      <pose>33.1594 -3.2868 -0.0500 0 0 -0.095003</pose>
+    </include>
+
+
+    <!-- plant_plot171 instances (disabled) -->
+    <include>
+      <name>plant_plot171_p170</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>94.2274 24.0435 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p171</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>86.4626 24.7834 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p172</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>77.5031 25.6372 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p173</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>69.7383 26.3771 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p190</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>93.3167 14.4868 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p191</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>85.5519 15.2267 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p192</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>76.5925 16.0805 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p193</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>68.8277 16.8204 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p210</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>92.0077 0.7491 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p211</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>84.2428 1.4890 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p212</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>75.2834 2.3427 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p213</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>67.5186 3.0826 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p230</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>91.0970 -8.8077 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p231</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>83.3322 -8.0678 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p232</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>74.3728 -7.2140 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot171_p233</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot171</uri>
+      <pose>66.6079 -6.4741 -0.0500 0 0 -0.095003</pose>
+    </include>
+
+    <!-- plant_plot189 instances (disabled) -->
+
+    <include>
+      <name>plant_plot189_p168</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>110.9516 22.4499 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p169</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>103.1868 23.1898 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p188</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>110.0410 12.8932 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p189</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>102.2761 13.6331 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p208</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>108.7319 -0.8446 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p209</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>100.9671 -0.1047 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p228</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>107.8212 -10.4013 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot189_p229</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot189</uri>
+      <pose>100.0564 -9.6614 -0.0500 0 0 -0.095003</pose>
+    </include>
+
+
+    <!-- plant_plot185 instances (disabled) -->
+
+    <include>
+      <name>plant_plot185_p164</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>144.4001 19.2626 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p165</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>136.6353 20.0025 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p166</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>127.6759 20.8562 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p167</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>119.9110 21.5961 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p184</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>143.4894 9.7059 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p185</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>135.7246 10.4458 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p186</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>126.7652 11.2995 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p187</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>119.0004 12.0394 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p204</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>142.1804 -4.0319 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p205</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>134.4156 -3.2920 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p206</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>125.4561 -2.4382 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p207</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>117.6913 -1.6983 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p224</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>141.2697 -13.5886 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p225</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>133.5049 -12.8487 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p226</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>124.5455 -11.9950 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot185_p227</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot185</uri>
+      <pose>116.7807 -11.2550 -0.0500 0 0 -0.095003</pose>
+    </include>
+
+    <!-- plant_plot163 instances (disabled) -->
+
+    <include>
+      <name>plant_plot163_p162</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>161.1243 17.6689 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p163</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>153.3595 18.4088 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p182</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>160.2137 8.1122 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p183</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>152.4489 8.8521 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p202</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>158.9046 -5.6255 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p203</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>151.1398 -4.8856 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p222</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>157.9940 -15.1823 -0.0500 0 0 -0.095003</pose>
+    </include>
+    <include>
+      <name>plant_plot163_p223</name>
+      <uri>model://p23_gazebo_worlds/models/plant_plot163</uri>
+      <pose>150.2291 -14.4423 -0.0500 0 0 -0.095003</pose>
+    </include>
+
+
+
+    <!-- ================================================================
+         WAYPOINT MARKERS 0-29  -  regenerated from outputs/waypoints.csv
+         Color by point_type: entry/overshoot=orange, row_start/row_end=red,
+         headland=green
+    ================================================================ -->
+    <!-- <model name="waypoint_marker_0">
+      <static>true</static>
+      <pose>25.236 -4.396 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.5 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_1">
+      <static>true</static>
+      <pose>25.236 -2.405 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_2">
+      <static>true</static>
+      <pose>25.976 5.360 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_3">
+      <static>true</static>
+      <pose>26.146 7.152 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_4">
+      <static>true</static>
+      <pose>26.886 14.917 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_5">
+      <static>true</static>
+      <pose>27.455 20.890 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_6">
+      <static>true</static>
+      <pose>28.195 28.655 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_7">
+      <static>true</static>
+      <pose>28.366 30.447 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_8">
+      <static>true</static>
+      <pose>29.106 38.211 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_9">
+      <static>true</static>
+      <pose>29.106 40.202 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.5 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_10">
+      <static>true</static>
+      <pose>30.599 40.060 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.5 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_11">
+      <static>true</static>
+      <pose>30.599 38.069 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_12">
+      <static>true</static>
+      <pose>29.859 30.304 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_13">
+      <static>true</static>
+      <pose>29.689 28.512 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_14">
+      <static>true</static>
+      <pose>28.949 20.748 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_15">
+      <static>true</static>
+      <pose>28.380 14.775 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_16">
+      <static>true</static>
+      <pose>27.640 7.010 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_17">
+      <static>true</static>
+      <pose>27.469 5.218 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_18">
+      <static>true</static>
+      <pose>26.729 -2.547 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_19">
+      <static>true</static>
+      <pose>26.729 -4.538 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.5 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_20">
+      <static>true</static>
+      <pose>28.222 -4.680 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.5 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_21">
+      <static>true</static>
+      <pose>28.222 -2.689 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_22">
+      <static>true</static>
+      <pose>28.962 5.076 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_23">
+      <static>true</static>
+      <pose>29.133 6.867 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_24">
+      <static>true</static>
+      <pose>29.873 14.632 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_25">
+      <static>true</static>
+      <pose>30.442 20.605 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_26">
+      <static>true</static>
+      <pose>31.182 28.370 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_27">
+      <static>true</static>
+      <pose>31.353 30.162 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_28">
+      <static>true</static>
+      <pose>32.092 37.927 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="waypoint_marker_29">
+      <static>true</static>
+      <pose>32.092 39.918 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.5 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model> -->
+
+    <!-- ================================================================
+         CROP ROWS  (8 ×)
+         Geometry:  10 m long (X) × 0.3 m wide (Y) × 0.6 m tall (Z)
+         Spacing:   2.6 m centre-to-centre along Y, array centred on y=0
+         Position:  near end 2 m ahead of robot spawn (x=0) → box centre x=7
+                    box centre z=0.3 (sitting on ground)
+         Rows:      crop_row_0 … crop_row_7
+    ================================================================ -->
+<!-- 
+    <model name="crop_row_0">
+      <static>true</static>
+      <pose>7 0 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_1">
+      <static>true</static>
+      <pose>7 -1.5 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_2">
+      <static>true</static>
+      <pose>7 -3 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_3">
+      <static>true</static>
+      <pose>7 -4.5 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_4">
+      <static>true</static>
+      <pose>7 -6.0 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_5">
+      <static>true</static>
+      <pose>7 -7.5 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_6">
+      <static>true</static>
+      <pose>7 -9.0 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="crop_row_7">
+      <static>true</static>
+      <pose>7 1.5 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.0 0.8 0.6</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>500.0 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.10 0.35 0.08 1.0</ambient>
+            <diffuse>0.15 0.50 0.10 1.0</diffuse>
+            <specular>0.02 0.05 0.01 1.0</specular>
+            <emissive>0.0 0.0 0.0 0.0</emissive>
+          </material>
+        </visual>
+      </link>
+    </model> -->
+
+
+    <!-- ================================================================
+         CORNER MARKERS  –  yellow box markers at the 4 corners of
+         plots 238, 237, 236, for visual alignment verification.
+    ================================================================ -->
+    <!-- <model name="corner_marker_238_0">
+      <static>true</static>
+      <pose>30.462 -2.903 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_238_1">
+      <static>true</static>
+      <pose>24.489 -2.334 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_238_2">
+      <static>true</static>
+      <pose>25.229 5.431 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_238_3">
+      <static>true</static>
+      <pose>31.202 4.862 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_237_0">
+      <static>true</static>
+      <pose>39.421 -3.756 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_237_1">
+      <static>true</static>
+      <pose>33.449 -3.187 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_237_2">
+      <static>true</static>
+      <pose>34.188 4.578 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_237_3">
+      <static>true</static>
+      <pose>40.161 4.008 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_236_0">
+      <static>true</static>
+      <pose>47.186 -4.496 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_236_1">
+      <static>true</static>
+      <pose>41.213 -3.927 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_236_2">
+      <static>true</static>
+      <pose>41.953 3.838 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="corner_marker_236_3">
+      <static>true</static>
+      <pose>47.926 3.269 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model> -->
+
+  </world>
+</sdf>

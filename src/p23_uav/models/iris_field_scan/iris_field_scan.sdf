@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='iris_field_scan'>
+    <include>
+      <uri>model://iris</uri>
+    </include>
+    <include>
+      <uri>model://field_scan_lidar</uri>
+      <pose>0 0 -0.05 0 0 0</pose>
+    </include>
+    <joint name="field_scan_lidar_joint" type="fixed">
+      <child>field_scan_lidar::link</child>
+      <parent>iris::base_link</parent>
+    </joint>
+  </model>
+</sdf>

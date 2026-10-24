@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       SHARED PROPERTIES
+       Included first by p23_robot.urdf.xacro so every sub-file can
+       reference these symbols without re-declaring them.
+  ================================================================ -->
+
+  <!-- Chassis -->
+  <xacro:property name="chassis_l"  value="1.5"/>  <!-- m, front-rear -->
+  <xacro:property name="chassis_w"  value="1.65"/>  <!-- m, left-right  -->
+  <xacro:property name="chassis_h"  value="1.89"/>  <!-- m, height       -->
+  <xacro:property name="chassis_m"  value="100.0"/>   <!-- kg              -->
+
+  <!-- Wheels -->
+  <xacro:property name="wheel_r"    value="0.35"/>   <!-- radius, m       -->
+  <xacro:property name="wheel_w"    value="0.25"/>   <!-- width, m        -->
+  <xacro:property name="wheel_m"    value="8.0"/>     <!-- kg              -->
+  <xacro:property name="wheelbase"  value="2.0"/>   <!-- front-rear axle spacing, m -->
+  <xacro:property name="track"      value="1.4"/>   <!-- left-right wheel-centre spacing, m -->
+
+  <!-- Chassis top surface z-offset from base_link origin (= axle height) -->
+  <xacro:property name="top_z"      value="1.82"/>
+
+  <!-- ================================================================
+       MATERIALS
+  ================================================================ -->
+  <material name="ugv_green">  <color rgba="0.18 0.42 0.18 1.0"/> </material>
+  <material name="tyre_black"> <color rgba="0.10 0.10 0.10 1.0"/> </material>
+  <material name="dark_grey">  <color rgba="0.20 0.20 0.20 1.0"/> </material>
+  <material name="light_grey"> <color rgba="0.75 0.75 0.75 1.0"/> </material>
+  <material name="white">      <color rgba="0.92 0.92 0.92 1.0"/> </material>
+  <material name="cam_black">  <color rgba="0.05 0.05 0.05 1.0"/> </material>
+  <material name="ir_orange">  <color rgba="0.90 0.45 0.10 1.0"/> </material>
+
+  <!-- ================================================================
+       INERTIA MACROS
+  ================================================================ -->
+
+  <!-- Uniform solid box.  ox/oy/oz: optional CoM offset from link origin. -->
+  <xacro:macro name="box_inertia" params="m x y z ox:=0 oy:=0 oz:=0">
+    <inertial>
+      <origin xyz="${ox} ${oy} ${oz}" rpy="0 0 0"/>
+      <mass value="${m}"/>
+      <inertia ixx="${m/12.0*(y*y + z*z)}" ixy="0" ixz="0"
+               iyy="${m/12.0*(x*x + z*z)}" iyz="0"
+               izz="${m/12.0*(x*x + y*y)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Solid cylinder, spin axis along Z (sensor link Z = symmetry axis). -->
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${m/12.0*(3.0*r*r + h*h)}" ixy="0" ixz="0"
+               iyy="${m/12.0*(3.0*r*r + h*h)}" iyz="0"
+               izz="${m/2.0*r*r}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Wheel cylinder: spin axis is Y in the link frame.
+       Ixx = Izz (transverse),  Iyy = m/2 r² (spin axis). -->
+  <xacro:macro name="wheel_inertia" params="m r h">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${m/12.0*(3.0*r*r + h*h)}" ixy="0" ixz="0"
+               iyy="${m/2.0*r*r}"               iyz="0"
+               izz="${m/12.0*(3.0*r*r + h*h)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- ================================================================
+       WHEEL MACRO  –  4-Wheel Steering (4WS)
+       Each corner has two joints:
+         1. {name}_steer_joint  revolute, axis Z (0 0 1), limits ±90°
+                  Allows ±π/2 rad steering (full left/right articulation).
+         2. {name}_wheel_joint  continuous, axis Y (0 1 0)
+                  Drives the wheel; axis is always in the steered direction.
+
+       TF chain per corner:
+         base_link
+           └─ {name}_steer_link  (steering knuckle, rotates about Z)
+                 └─ {name}_wheel_link  (tyre, rotates about Y)
+  ================================================================ -->
+  <xacro:macro name="wheel" params="name x y">
+
+    <!-- Steering knuckle: visible kingpin cylinder oriented along Z. -->
+    <link name="${name}_steer_link">
+      <visual>
+        <geometry>
+          <cylinder radius="0.06" length="0.22"/>
+        </geometry>
+        <material name="dark_grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.06" length="0.22"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertia m="1.0" r="0.06" h="0.22"/>
+    </link>
+
+    <!-- Steer joint: ±90° revolute about Z. -->
+    <joint name="${name}_steer_joint" type="revolute">
+      <parent link="base_link"/>
+      <child  link="${name}_steer_link"/>
+      <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
+      <axis   xyz="0 0 1"/>
+      <limit lower="${-pi/2.0}" upper="${pi/2.0}"
+             effort="100.0" velocity="1.0"/>
+      <dynamics damping="0.5" friction="0.1"/>
+    </joint>
+
+    <!-- Tyre: visual cylinder rotated π/2 about X so its axis aligns with Y. -->
+    <link name="${name}_wheel_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2.0} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_r}" length="${wheel_w}"/>
+        </geometry>
+        <material name="tyre_black"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2.0} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_r}" length="${wheel_w}"/>
+        </geometry>
+      </collision>
+      <xacro:wheel_inertia m="${wheel_m}" r="${wheel_r}" h="${wheel_w}"/>
+    </link>
+
+    <!-- Drive joint: rolls about the steered Y axis. -->
+    <joint name="${name}_wheel_joint" type="continuous">
+      <parent link="${name}_steer_link"/>
+      <child  link="${name}_wheel_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis   xyz="0 1 0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- ================================================================
+       FIXED SENSOR MACROS
+  ================================================================ -->
+
+  <!-- Box-shaped sensor. -->
+  <xacro:macro name="sensor_box"
+               params="name parent x y z roll pitch yaw sx sy sz m mat">
+    <link name="${name}_link">
+      <visual>
+        <geometry><box size="${sx} ${sy} ${sz}"/></geometry>
+        <material name="${mat}"/>
+      </visual>
+      <collision>
+        <geometry><box size="${sx} ${sy} ${sz}"/></geometry>
+      </collision>
+      <xacro:box_inertia m="${m}" x="${sx}" y="${sy}" z="${sz}"/>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child  link="${name}_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Cylinder-shaped sensor. -->
+  <xacro:macro name="sensor_cylinder"
+               params="name parent x y z roll pitch yaw r h m mat">
+    <link name="${name}_link">
+      <visual>
+        <geometry><cylinder radius="${r}" length="${h}"/></geometry>
+        <material name="${mat}"/>
+      </visual>
+      <collision>
+        <geometry><cylinder radius="${r}" length="${h}"/></geometry>
+      </collision>
+      <xacro:cylinder_inertia m="${m}" r="${r}" h="${h}"/>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child  link="${name}_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Camera optical frame (REP-104): z=forward, x=right, y=down.
+       rpy(-π/2, 0, -π/2) rotates the body frame into the optical frame. -->
+  <xacro:macro name="optical_frame" params="name">
+    <link name="${name}_optical_link"/>
+    <joint name="${name}_optical_joint" type="fixed">
+      <parent link="${name}_link"/>
+      <child  link="${name}_optical_link"/>
+      <origin xyz="0 0 0" rpy="${-pi/2.0} 0 ${-pi/2.0}"/>
+    </joint>
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,1363 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+  <model name="plot_162">
+    <static>true</static>
+    <pose>165.8102 37.9374 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_163">
+    <static>true</static>
+    <pose>158.0453 38.6773 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_164">
+    <static>true</static>
+    <pose>149.0859 39.5311 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_165">
+    <static>true</static>
+    <pose>141.3211 40.2710 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_166">
+    <static>true</static>
+    <pose>132.3617 41.1247 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_167">
+    <static>true</static>
+    <pose>124.5968 41.8646 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_168">
+    <static>true</static>
+    <pose>115.6374 42.7184 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_169">
+    <static>true</static>
+    <pose>107.8726 43.4583 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_170">
+    <static>true</static>
+    <pose>98.9132 44.3120 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_171">
+    <static>true</static>
+    <pose>91.1484 45.0519 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_172">
+    <static>true</static>
+    <pose>82.1889 45.9057 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_173">
+    <static>true</static>
+    <pose>74.4241 46.6456 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_174">
+    <static>true</static>
+    <pose>65.4647 47.4993 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_175">
+    <static>true</static>
+    <pose>57.6999 48.2392 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_176">
+    <static>true</static>
+    <pose>48.7405 49.0930 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_177">
+    <static>true</static>
+    <pose>40.9756 49.8329 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_178">
+    <static>true</static>
+    <pose>32.0162 50.6866 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_179">
+    <static>true</static>
+    <pose>24.2514 51.4265 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_180">
+    <static>true</static>
+    <pose>15.2920 52.2803 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_181">
+    <static>true</static>
+    <pose>7.5272 53.0202 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_182">
+    <static>true</static>
+    <pose>164.8995 28.3807 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_183">
+    <static>true</static>
+    <pose>157.1347 29.1206 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_184">
+    <static>true</static>
+    <pose>148.1753 29.9744 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_185">
+    <static>true</static>
+    <pose>140.4104 30.7143 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_186">
+    <static>true</static>
+    <pose>131.4510 31.5680 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_187">
+    <static>true</static>
+    <pose>123.6862 32.3079 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_188">
+    <static>true</static>
+    <pose>114.7268 33.1617 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_189">
+    <static>true</static>
+    <pose>106.9620 33.9016 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_190">
+    <static>true</static>
+    <pose>98.0025 34.7553 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_191">
+    <static>true</static>
+    <pose>90.2377 35.4952 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_192">
+    <static>true</static>
+    <pose>81.2783 36.3490 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_193">
+    <static>true</static>
+    <pose>73.5135 37.0889 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_194">
+    <static>true</static>
+    <pose>64.5541 37.9426 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_195">
+    <static>true</static>
+    <pose>56.7892 38.6825 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_196">
+    <static>true</static>
+    <pose>47.8298 39.5362 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_197">
+    <static>true</static>
+    <pose>40.0650 40.2762 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_198">
+    <static>true</static>
+    <pose>31.1056 41.1299 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_199">
+    <static>true</static>
+    <pose>23.3407 41.8698 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_200">
+    <static>true</static>
+    <pose>14.3813 42.7235 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_201">
+    <static>true</static>
+    <pose>6.6165 43.4635 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_202">
+    <static>true</static>
+    <pose>163.5904 14.6429 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_203">
+    <static>true</static>
+    <pose>155.8256 15.3828 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_204">
+    <static>true</static>
+    <pose>146.8662 16.2366 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_205">
+    <static>true</static>
+    <pose>139.1014 16.9765 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_206">
+    <static>true</static>
+    <pose>130.1420 17.8302 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_207">
+    <static>true</static>
+    <pose>122.3771 18.5701 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_208">
+    <static>true</static>
+    <pose>113.4177 19.4239 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_209">
+    <static>true</static>
+    <pose>105.6529 20.1638 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_210">
+    <static>true</static>
+    <pose>96.6935 21.0175 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_211">
+    <static>true</static>
+    <pose>88.9286 21.7574 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_212">
+    <static>true</static>
+    <pose>79.9692 22.6112 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_213">
+    <static>true</static>
+    <pose>72.2044 23.3511 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_214">
+    <static>true</static>
+    <pose>63.2450 24.2048 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_215">
+    <static>true</static>
+    <pose>55.4802 24.9447 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_216">
+    <static>true</static>
+    <pose>46.5207 25.7985 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_217">
+    <static>true</static>
+    <pose>38.7559 26.5384 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_218">
+    <static>true</static>
+    <pose>29.7965 27.3921 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_219">
+    <static>true</static>
+    <pose>22.0317 28.1320 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_220">
+    <static>true</static>
+    <pose>13.0723 28.9858 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_221">
+    <static>true</static>
+    <pose>5.3074 29.7257 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_222">
+    <static>true</static>
+    <pose>162.6798 5.0862 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_223">
+    <static>true</static>
+    <pose>154.9150 5.8261 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_224">
+    <static>true</static>
+    <pose>145.9555 6.6799 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_225">
+    <static>true</static>
+    <pose>138.1907 7.4198 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_226">
+    <static>true</static>
+    <pose>129.2313 8.2735 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_227">
+    <static>true</static>
+    <pose>121.4665 9.0134 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_228">
+    <static>true</static>
+    <pose>112.5071 9.8672 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_229">
+    <static>true</static>
+    <pose>104.7422 10.6071 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_230">
+    <static>true</static>
+    <pose>95.7828 11.4608 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_231">
+    <static>true</static>
+    <pose>88.0180 12.2007 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_232">
+    <static>true</static>
+    <pose>79.0586 13.0545 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_233">
+    <static>true</static>
+    <pose>71.2937 13.7944 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_234">
+    <static>true</static>
+    <pose>62.3343 14.6481 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_235">
+    <static>true</static>
+    <pose>54.5695 15.3880 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_236">
+    <static>true</static>
+    <pose>45.6101 16.2418 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_237">
+    <static>true</static>
+    <pose>37.8453 16.9817 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_238">
+    <static>true</static>
+    <pose>28.8858 17.8354 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_239">
+    <static>true</static>
+    <pose>21.1210 18.5753 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_240">
+    <static>true</static>
+    <pose>12.1616 19.4291 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="plot_241">
+    <static>true</static>
+    <pose>4.3968 20.1690 0.01 0 0 1.475793</pose>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>7.8000 6.0000 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.0 0.8 0.0 0.6</ambient>
+          <diffuse>0.0 0.8 0.0 0.6</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

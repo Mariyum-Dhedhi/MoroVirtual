@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="plant_plot189">
+    <static>true</static>
+    <link name="link">
+      <visual name="visual">
+        <geometry><mesh><uri>meshes/plant_plot189.obj</uri></mesh></geometry>
+        <material>
+          <ambient>0.08, 0.16, 0.04 1</ambient>
+          <diffuse>0.26, 0.48, 0.12 1</diffuse>
+          <specular>0.10, 0.10, 0.10 1</specular>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://p23_gazebo_worlds/models/plant_plot178/meshes/plant_plot178_ground.obj</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

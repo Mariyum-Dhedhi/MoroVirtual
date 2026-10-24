@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot name="p23_ugv" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================================
+       PROJECT P23 – AGRICULTURAL UGV
+       4-wheel skid-steer chassis
+
+       Sensors:
+         1× IMU (SPG IMU)
+         2× GNSS (dual-antenna RTK)
+         4× RGB camera (camera1, camera2, camera3, camera4)
+         1× IR / thermal camera
+         2× laser profile scanner
+         1× 3-D LiDAR
+
+       Include order matters:
+         1. _macros          – properties, materials, inertia & sensor macros
+         2. _chassis         – base_footprint, base_link, wheels  (needs macros)
+         3. sensors          – each references macros + top_z property
+         4. _gazebo (last)   – Gazebo Fortress overrides (needs all links present)
+  =================================================================== -->
+
+  <xacro:include filename="_macros.xacro"/>
+  <xacro:include filename="_chassis.xacro"/>
+  <xacro:include filename="_lidar_3d.xacro"/>
+  <xacro:include filename="_gnss.xacro"/>
+  <xacro:include filename="_imu.xacro"/>
+  <xacro:include filename="_cameras_rgb.xacro"/>
+  <xacro:include filename="_camera_ir.xacro"/>
+  <xacro:include filename="_profile_scanners.xacro"/>
+  <xacro:include filename="_ros2_control.xacro"/>
+  <xacro:include filename="_gazebo.xacro"/>
+
+</robot>

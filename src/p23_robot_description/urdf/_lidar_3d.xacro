@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       3-D LiDAR  (e.g. Ouster OS1-64)
+       Mounted on a structural pedestal centred on the chassis top.
+
+       Heights from base_link origin (= axle height):
+         Pedestal centre  0.295 m  (top_z + pedestal_h/2 = 0.250 + 0.045)
+         Pedestal top     0.340 m
+         LiDAR centre     0.380 m  (pedestal top + lidar_h/2 = 0.340 + 0.040)
+  ================================================================ -->
+
+  <!-- Structural pedestal -->
+  <xacro:sensor_box name="lidar_pedestal"
+    parent="imu_link"
+    x="${chassis_l/2+0.155}" y="0.00" z="0.155"
+    roll="0" pitch="0.78" yaw="0"
+    sx="${0.14*2}" sy="${0.14*2}" sz="${0.09}"
+    m="0.30" mat="dark_grey"/>
+
+  <!-- LiDAR body (parented to pedestal so z is relative to pedestal centre) -->
+  <xacro:sensor_cylinder name="lidar_3d"
+    parent="lidar_pedestal_link"
+    x="0.00" y="0.00" z="${0.045 + 0.040}"
+    roll="0" pitch="0" yaw="0"
+    r="${0.055*2}" h="${0.2*1.5}"
+    m="0.80" mat="dark_grey"/>
+
+</robot>

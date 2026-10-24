@@ -1,0 +1,17 @@
+navsat_transform_node:
+  ros__parameters:
+    use_sim_time: true
+    frequency: 10.0
+    delay: 2.0
+    magnetic_declination_radians: 0.0
+    yaw_offset: 0.0
+    zero_altitude: true
+    broadcast_utm_transform: false
+    broadcast_utm_transform_as_parent_frame: false
+    publish_filtered_gps: false
+    use_odometry_yaw: false
+    wait_for_datum: true
+    datum: [50.6259768055, 6.9836962966, 0.0]
+    sensor_timeout: 0.5
+    world_frame: odom
+    base_link_frame: base_footprint

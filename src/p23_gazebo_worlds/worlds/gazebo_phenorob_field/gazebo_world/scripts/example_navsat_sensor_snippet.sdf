@@ -1,0 +1,50 @@
+<!--
+  Drop this <sensor> block inside a <link> of your robot's SDF (or the
+  equivalent <gazebo> extension block in a URDF) to give it a working
+  GPS receiver inside the phenorob_field world.
+
+  Because the world's <spherical_coordinates> are set to this field's real
+  lat/lon (see worlds/phenorob_field.sdf), the values this sensor reports
+  will be real, meaningful GPS coordinates for the actual field near
+  Campus Klein-Altendorf, Bonn, not arbitrary simulation numbers.
+-->
+<sensor name="gps_sensor" type="navsat">
+  <always_on>true</always_on>
+  <update_rate>5</update_rate>
+  <topic>/robot/gps</topic>
+  <navsat>
+    <!-- Realistic consumer-GPS-like noise. Tighten/loosen to match your
+         actual receiver's spec sheet (RTK units would use much smaller
+         stddevs, e.g. 0.01-0.02). -->
+    <position_sensing>
+      <horizontal>
+        <noise type="gaussian">
+          <mean>0</mean>
+          <stddev>1.5</stddev>
+        </noise>
+      </horizontal>
+      <vertical>
+        <noise type="gaussian">
+          <mean>0</mean>
+          <stddev>3.0</stddev>
+        </noise>
+      </vertical>
+    </position_sensing>
+  </navsat>
+  <plugin filename="libignition-gazebo-navsat-system.so" name="ignition::gazebo::systems::NavSat"/>
+</sensor>
+
+<!--
+  ROS 2 users: bridge the topic with ros_gz_bridge, e.g. in a launch file
+  or via ros_gz_bridge parameter_bridge:
+
+    /robot/gps@sensor_msgs/msg/NavSatFix[gz.msgs.NavSat
+
+  This publishes a standard sensor_msgs/NavSatFix on /robot/gps that any
+  ROS 2 navigation stack (Nav2, robot_localization, etc.) can consume
+  exactly as it would from a real GPS receiver.
+
+  Classic Gazebo (not gz-sim) users: use the hector_gazebo_ros_gps plugin
+  instead; same idea, it also reads the world's spherical_coordinates
+  origin to produce real lat/lon.
+-->

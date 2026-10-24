@@ -1,0 +1,25 @@
+# Top-level: rasterio, pyshp, pyproj, matplotlib, shapely, numpy, PyYAML
+# (PyYAML is required by generate_boustrophedon_waypoints.py)
+# Remaining entries are their direct dependencies; pip resolves the rest
+# of the transitive closure (e.g. six) automatically on install.
+affine==3.0.0
+attrs==26.1.0
+certifi==2026.7.22
+click==8.4.2
+click-plugins==1.1.1.2
+cligj==0.7.2
+contourpy==1.3.2
+cycler==0.12.1
+fonttools==4.63.0
+kiwisolver==1.5.0
+matplotlib==3.10.9
+numpy==2.2.6
+packaging==26.3
+pillow==12.3.0
+pyparsing==3.3.2
+pyproj==3.7.1
+pyshp==3.1.6
+python-dateutil==2.9.0.post0
+PyYAML==6.0.3
+rasterio==1.4.4
+shapely==2.1.2

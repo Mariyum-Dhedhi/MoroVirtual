@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       IMU  (e.g. SBG Ellipse-N GNSS/INS)
+       Compact unit mounted at the chassis geometric centre.
+       The Gazebo IMU sensor is attached to this link in _gazebo.xacro.
+
+       Height from base_link origin:
+         imu_link centre  top_z + 0.4 m  (above chassis top)
+  ================================================================ -->
+
+  <xacro:sensor_box name="imu"
+    parent="base_link"
+    x="0" y="0" z="${1.82-wheel_r+0.1}"
+    roll="0" pitch="0" yaw="0"
+    sx="${0.14*2}" sy="${0.10*2}" sz="${0.050*2}"
+    m="0.45" mat="light_grey"/>
+
+</robot>

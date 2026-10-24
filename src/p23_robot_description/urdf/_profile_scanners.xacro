@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       LASER PROFILE SCANNERS  (2×, e.g. LMI Gocator 2xxx)
+       Side-front mounted, angled 60° inward-downward to profile the
+       crop row on each side of the robot.
+
+       Roll convention:
+         Left  scanner: roll = -π/3  → Z-axis tilts toward -y (inward) and -z (ground)
+         Right scanner: roll = +π/3  → Z-axis tilts toward +y (inward) and -z (ground)
+
+       Heights from base_link origin:
+         Scanner centre  top_z + 0 = 0.250 m  (flush with chassis top edge)
+  ================================================================ -->
+
+  <!-- Left crop-row scanner -->
+  <xacro:sensor_box name="profile_scanner_left"
+    parent="imu_link"
+    x="0" y=" 0.55" z="-0.5"
+    roll="${-pi/3.0}" pitch="0" yaw="0"
+    sx="${0.150*2}" sy="${0.060*2}" sz="${0.060*2}"
+    m="0.60" mat="dark_grey"/>
+
+  <!-- Right crop-row scanner (mirror of left) -->
+  <xacro:sensor_box name="profile_scanner_right"
+    parent="imu_link"
+    x="0" y="-0.55" z="-0.5"
+    roll="${pi/3.0}" pitch="0" yaw="0"
+    sx="${0.150*2}" sy="${0.060*2}" sz="${0.060*2}"
+    m="0.60" mat="dark_grey"/>
+
+</robot>

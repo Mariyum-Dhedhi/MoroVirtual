@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="field_terrain">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <!-- Decimated version of the same terrain (2,784 verts vs 44,672 in
+             the visual mesh) used for collision. Static trimesh collision is
+             well-supported in Gazebo, but a lighter mesh here still keeps
+             contact/collision checks cheap and stable at simulation rates,
+             while remaining a faithful approximation of the real terrain
+             shape (unlike a flat placeholder). -->
+        <geometry>
+          <mesh>
+            <uri>meshes/field_terrain_collision.obj</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>meshes/field_terrain.obj</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

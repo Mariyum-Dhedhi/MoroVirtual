@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       DUAL-ANTENNA GNSS  (e.g. Septentrio ANN-MB patch antennas)
+       Two antennas placed on the chassis fore-aft centreline.
+       The baseline vector gnss_rear → gnss_front is used by the
+       RTK receiver to compute robot heading.
+
+       Heights from base_link origin:
+         Antenna centre  top_z + h/2 = 0.250 + 0.020 = 0.270 m
+  ================================================================ -->
+
+  <!-- Forward antenna (RTK rover / heading baseline front) -->
+  <xacro:sensor_cylinder name="gnss_front"
+    parent="imu_link"
+    x="1.0" y="0" z="${0.2+0.05}"
+    roll="0" pitch="0" yaw="0"
+    r="${0.0050*2}" h="${0.2}"
+    m="0.28" mat="dark_grey"/>
+
+  <!-- Rearward antenna (heading baseline rear) -->
+  <xacro:sensor_cylinder name="gnss_rear"
+    parent="imu_link"
+    x="-1.0" y="0" z="${0.2+0.05}"
+    roll="0" pitch="0" yaw="0"
+    r="${0.0050*2}" h="${0.2}"
+    m="0.28" mat="dark_grey"/>
+
+</robot>

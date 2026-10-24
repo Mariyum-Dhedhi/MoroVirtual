@@ -1,0 +1,138 @@
+VIZ_SHAPEFILES PIPELINE EXPLANATION
+====================================
+
+PURPOSE
+-------
+This project overlays a field boundary shapefile on top of a drone-captured
+orthophoto (an aerial GeoTIFF image), so the field boundary can be visually
+verified against the real imagery. It produces a PNG figure showing the
+orthophoto with the shapefile polygon(s) drawn on top in yellow.
+
+FOLDER LAYOUT
+-------------
+Viz_shapefiles/
+  requirements.txt        - Python dependencies (matplotlib, pyshp, numpy,
+                             rasterio, pyproj)
+  README.md               - setup + usage instructions
+  .venv/                  - local virtual environment (not part of the logic)
+
+  orthophoto/
+    raster_data_UAV3-RGB/raster_data/UAV3-RGB/
+      <date>_ortho.tif     - RGB orthophoto GeoTIFFs, one per UAV survey
+                             date (e.g. 230607_ortho.tif = 2023-06-07)
+      <date>_DEM.tif        - corresponding Digital Elevation Model rasters
+                             for the same date (not currently used by the
+                             plotting scripts, but stored alongside)
+
+  shapefiles/2023/
+    PhenorobField_2023_lla.shp/.shx/.dbf/.cpg
+                            - ESRI shapefile describing the field boundary
+                              polygon(s), in geographic coordinates
+                              (longitude/latitude, EPSG:4326 - "lla" =
+                              lat/lon/alt naming convention)
+
+  src/
+    orthophoto_reader.py   - reads a GeoTIFF and prepares it for display
+    shapefile_reader.py    - reads shapefile geometry/attributes
+    plot_shapefile.py      - standalone script: plot shapefile alone (no
+                              orthophoto), useful for sanity-checking the
+                              field polygon shape/numbering
+
+  scripts/
+    plot_orthophoto_with_shapefile.py
+                            - main pipeline entry point: combines orthophoto
+                              + shapefile into one overlay figure
+
+  outputs/
+    orthophoto_with_shapefile.png
+                            - the generated overlay image (pipeline result)
+
+
+THE PIPELINE, STEP BY STEP
+---------------------------
+
+1. Read the orthophoto (src/orthophoto_reader.py -> OrthophotoReader)
+   - Opens the GeoTIFF with rasterio.
+   - Reads the raster bands and the georeferenced bounds (left/right/
+     bottom/top) and the raster's CRS (coordinate reference system, e.g.
+     a UTM projection in meters).
+   - Converts the raster from (bands, height, width) to an image-friendly
+     (height, width, bands) array, keeping only the first 3 bands (RGB) if
+     there are more, or treating it as single-band otherwise.
+   - Normalizes pixel values to [0, 1] float for display if the data isn't
+     already uint8.
+   - Result: an `image` array, an `extent` tuple (left, right, bottom, top)
+     in the orthophoto's native CRS, and the `crs` string.
+
+2. Read the shapefile (src/shapefile_reader.py -> ShapefileReader)
+   - Uses the `pyshp` library to open the .shp file.
+   - For each shape record, extracts the point coordinates and splits them
+     into "parts" (rings), producing a nested structure:
+       polygons -> list of polygons -> list of rings -> list of (x, y)
+     This handles multi-ring polygons (e.g. a field with a hole, or a
+     shapefile containing multiple field plots).
+   - Also captures the shapefile's attribute table (`records`, from the
+     .dbf) and can compute the overall bounding box (`bounds`).
+   - The shapefile in this repo is in EPSG:4326 (longitude/latitude), as
+     indicated by the "_lla" filename suffix.
+
+3. Reconcile coordinate systems (scripts/plot_orthophoto_with_shapefile.py)
+   - The orthophoto is in a projected CRS (e.g. UTM, in meters), while the
+     shapefile is in geographic coordinates (degrees). These can't be
+     plotted together directly.
+   - `_looks_like_lon_lat()` heuristically checks whether the shapefile's
+     bounding box falls within valid longitude (-180..180) / latitude
+     (-90..90) ranges.
+   - If so, `_reproject_polygons()` uses `pyproj.Transformer` to convert
+     every polygon ring's coordinates from EPSG:4326 into the orthophoto's
+     CRS, so both datasets end up in the same metric coordinate space.
+
+4. Plot the overlay (plot_overlay() in the same script)
+   - Creates a matplotlib figure/axis.
+   - Displays the orthophoto image with `ax.imshow(..., extent=orthophoto
+     .extent, origin="upper")`, which places the raster pixels at their
+     correct real-world coordinates.
+   - Loops over every polygon/ring in the (possibly reprojected) shapefile
+     geometry and draws it with `ax.plot(..., color="yellow")` on top of
+     the image.
+   - Sets title/labels and forces equal aspect ratio so the map isn't
+     distorted.
+
+5. Save / display the result
+   - The figure is saved to `outputs/orthophoto_with_shapefile.png` at
+     300 dpi.
+   - By default an interactive window also pops up (`plt.show()`); passing
+     `--no-show` skips this and just saves the file.
+
+6. Command-line interface (parse_args() / main())
+   - Default inputs: orthophoto/230607_ortho.tif and
+     shapefiles/2023/PhenorobField_2023_lla.shp (note: the actual file is
+     nested under orthophoto/raster_data_UAV3-RGB/raster_data/UAV3-RGB/,
+     so the literal default path needs `--orthophoto` overridden unless
+     run from the right relative location or the file has been moved/
+     symlinked to that default path).
+   - `--orthophoto`, `--shapefile`, `--output` let the user point to any
+     specific date's ortho image or a different shapefile.
+   - `--no-show` suppresses the interactive matplotlib window (useful for
+     headless/batch runs).
+
+OPTIONAL / SUPPORTING SCRIPT
+-----------------------------
+src/plot_shapefile.py is a simpler, standalone tool that plots ONLY the
+shapefile polygons (no orthophoto), filling each polygon in translucent
+green and labeling each with a number at its centroid. This is useful for
+quickly inspecting the field plot layout/numbering without needing an
+orthophoto at all. Run as:
+    python src/plot_shapefile.py [optional path to .shp]
+
+SUMMARY OF DATA FLOW
+---------------------
+  GeoTIFF (.tif)  --rasterio-->  image array + extent + CRS  --\
+                                                                 >-- matplotlib overlay --> PNG in outputs/
+  Shapefile (.shp) --pyshp-->  polygon rings (lon/lat)  --pyproj reproject--/
+
+In short: the pipeline reads a georeferenced drone orthophoto and a field-
+boundary shapefile, reprojects the shapefile into the orthophoto's
+coordinate system if needed, and renders both together as a single
+annotated image for visual verification of the field boundary against the
+real aerial imagery.

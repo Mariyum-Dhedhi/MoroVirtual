@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Gazebo Fortress (Ignition Gazebo 6) overrides.
+    MUST be included LAST in p23_robot.urdf.xacro.
+
+    World-level plugins required in soil.sdf:
+      ignition-gazebo-imu-system
+      ignition-gazebo-navsat-system
+      ignition-gazebo-sensors-system (ogre2, for cameras + lidar)
+
+    Ignition topics → bridged to ROS 2 by ros_gz_bridge in sim.launch.py:
+      /imu/data_raw                   → /imu/data            (Imu)
+      /gnss/front_raw                 → /gnss/front/fix      (NavSatFix)
+      /gnss/rear_raw                  → /gnss/rear/fix       (NavSatFix)
+      /camera/camera1                 → /camera/camera1/image_raw   (Image)
+      /camera/camera2                 → /camera/camera2/image_raw
+      /camera/camera3                 → /camera/camera3/image_raw
+      /camera/camera4                 → /camera/camera4/image_raw
+      /camera/ir                      → /camera/ir/image_raw
+      /lidar/points_raw/points        → /lidar/points        (PointCloud2)
+      /scanner/left_raw               → /scanner/left        (LaserScan)
+      /scanner/right_raw              → /scanner/right       (LaserScan)
+      /odom/ground_truth_raw          → /ground_truth/odom   (Odometry)
+  -->
+
+  <!-- ================================================================
+       1. CHASSIS
+  ================================================================ -->
+  <gazebo reference="base_link">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+
+  <!-- ================================================================
+       2. STEERING KNUCKLES
+  ================================================================ -->
+  <gazebo reference="front_left_steer_link">  <selfCollide>false</selfCollide> </gazebo>
+  <gazebo reference="front_right_steer_link"> <selfCollide>false</selfCollide> </gazebo>
+  <gazebo reference="rear_left_steer_link">   <selfCollide>false</selfCollide> </gazebo>
+  <gazebo reference="rear_right_steer_link">  <selfCollide>false</selfCollide> </gazebo>
+
+  <!-- ================================================================
+       3. WHEELS — compacted-soil friction
+  ================================================================ -->
+  <gazebo reference="front_left_wheel_link">
+    <selfCollide>false</selfCollide>
+    <mu1>0.80</mu1><mu2>0.60</mu2>
+  </gazebo>
+  <gazebo reference="front_right_wheel_link">
+    <selfCollide>false</selfCollide>
+    <mu1>0.80</mu1><mu2>0.60</mu2>
+  </gazebo>
+  <gazebo reference="rear_left_wheel_link">
+    <selfCollide>false</selfCollide>
+    <mu1>0.80</mu1><mu2>0.60</mu2>
+  </gazebo>
+  <gazebo reference="rear_right_wheel_link">
+    <selfCollide>false</selfCollide>
+    <mu1>0.80</mu1><mu2>0.60</mu2>
+  </gazebo>
+
+  <!-- ================================================================
+       4a. IMU  (ignition-gazebo-imu-system)
+       50 Hz · topic /imu/data_raw
+  ================================================================ -->
+  <gazebo reference="imu_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <topic>/imu/data_raw</topic>
+      <imu>
+        <angular_velocity>
+          <x><noise type="gaussian"><mean>0</mean><stddev>0.00018665</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0</mean><stddev>0.00018665</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0</mean><stddev>0.00018665</stddev></noise></z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x><noise type="gaussian"><mean>0</mean><stddev>0.017</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0</mean><stddev>0.017</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0</mean><stddev>0.017</stddev></noise></z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- ================================================================
+       4b. GNSS  (ignition-gazebo-navsat-system)
+       5 Hz · topics /gnss/front_raw  /gnss/rear_raw
+  ================================================================ -->
+  <gazebo reference="gnss_front_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="gnss_front" type="navsat">
+      <always_on>true</always_on>
+      <update_rate>5</update_rate>
+      <topic>/gnss/front_raw</topic>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="gnss_rear_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="gnss_rear" type="navsat">
+      <always_on>true</always_on>
+      <update_rate>5</update_rate>
+      <topic>/gnss/rear_raw</topic>
+    </sensor>
+  </gazebo>
+
+  <!-- ================================================================
+       4c. RGB CAMERAS  (ignition-gazebo-sensors-system + ogre2)
+       80° HFOV · 640×480 · 30 Hz
+  ================================================================ -->
+  <gazebo reference="camera1_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="camera1" type="camera">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <topic>/camera/camera1</topic>
+      <pose>0 0 0 ${pi/2} ${pi/2} 0</pose>
+      <camera name="camera1">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+        <clip><near>0.05</near><far>200</far></clip>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.007</stddev></noise>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="camera2_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="camera2" type="camera">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <topic>/camera/camera2</topic>
+      <pose>0 0 0 ${pi/2} ${pi/2} 0</pose>
+      <camera name="camera2">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+        <clip><near>0.05</near><far>200</far></clip>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.007</stddev></noise>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="camera3_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="camera3" type="camera">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <topic>/camera/camera3</topic>
+      <pose>0 0 0 ${-pi/2} ${pi/2} 0</pose>
+      <camera name="camera3">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+        <clip><near>0.05</near><far>200</far></clip>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.007</stddev></noise>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="camera4_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="camera4" type="camera">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <topic>/camera/camera4</topic>
+      <pose>0 0 0 ${-pi/2} ${pi/2} 0</pose>
+      <camera name="camera4">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+        <clip><near>0.05</near><far>200</far></clip>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.007</stddev></noise>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- ================================================================
+       4d. IR CAMERA  (modelled as greyscale camera, L8)
+       57° HFOV · 640×512 · 30 Hz · topic /camera/ir
+  ================================================================ -->
+  <gazebo reference="camera_ir_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="camera_ir" type="camera">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <topic>/camera/ir</topic>
+      <pose>0 0 0 0 ${pi/2} 0</pose>
+      <camera name="camera_ir">
+        <horizontal_fov>0.9948377</horizontal_fov>
+        <image><width>640</width><height>512</height><format>L8</format></image>
+        <clip><near>0.05</near><far>100</far></clip>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.02</stddev></noise>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- ================================================================
+       4e. 3-D LiDAR  (Ouster OS1-16 approximation)
+       360° × 16 ch · 10 Hz · 0.3–50 m
+       topic /lidar/points_raw → /lidar/points_raw/points (PointCloud2)
+  ================================================================ -->
+  <gazebo reference="lidar_3d_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="lidar_3d" type="gpu_lidar">
+      <always_on>true</always_on>
+      <update_rate>10</update_rate>
+      <visualize>true</visualize>
+      <topic>/lidar/points_raw</topic>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>512</samples><resolution>1</resolution>
+            <min_angle>-0.5236</min_angle><max_angle>0.5236</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>16</samples><resolution>1</resolution>
+            <min_angle>-0.5236</min_angle><max_angle>0.5236</max_angle>
+          </vertical>
+        </scan>
+        <range><min>0.3</min><max>50.0</max><resolution>0.01</resolution></range>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.008</stddev></noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+  <gazebo reference="lidar_pedestal_link"> <selfCollide>false</selfCollide> </gazebo>
+
+  <!-- Prevent Ignition from lumping lidar_3d_link into base_footprint via fixed-joint collapsing.
+       Without this, sensor frame_id = p23_ugv/base_footprint/lidar_3d (not in TF tree). -->
+  <gazebo reference="lidar_3d_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <!-- Prevent Ignition from lumping imu_link into base_footprint via fixed-joint collapsing.
+       Without this, sensor frame_id = p23_ugv/base_footprint/imu_sensor (not in TF tree),
+       which breaks navsat_transform_node's base_link -> imu frame TF lookup. -->
+  <gazebo reference="imu_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <!-- ================================================================
+       4f. LASER PROFILE SCANNERS  (2-D line scan, 1 vertical channel)
+       180° · 1000 pts · 25 Hz · 0.08–10 m
+  ================================================================ -->
+  <gazebo reference="profile_scanner_left_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="scanner_left" type="gpu_lidar">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <visualize>false</visualize>
+      <topic>/scanner/left_raw</topic>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>1000</samples><resolution>1</resolution>
+            <min_angle>-1.5707963</min_angle><max_angle>1.5707963</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples><resolution>1</resolution>
+            <min_angle>0</min_angle><max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range><min>0.08</min><max>10.0</max><resolution>0.001</resolution></range>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.002</stddev></noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="profile_scanner_right_link">
+    <selfCollide>false</selfCollide>
+    <sensor name="scanner_right" type="gpu_lidar">
+      <always_on>false</always_on>
+      <update_rate>1</update_rate>
+      <visualize>false</visualize>
+      <topic>/scanner/right_raw</topic>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>1000</samples><resolution>1</resolution>
+            <min_angle>-1.5707963</min_angle><max_angle>1.5707963</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples><resolution>1</resolution>
+            <min_angle>0</min_angle><max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range><min>0.08</min><max>10.0</max><resolution>0.001</resolution></range>
+        <noise><type>gaussian</type><mean>0</mean><stddev>0.002</stddev></noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+  <!-- ================================================================
+       5. GROUND-TRUTH ODOMETRY  (ignition-gazebo-odometry-publisher-system)
+       Publishes base_link's true pose/twist from the simulator directly —
+       no sensor model, no noise. Not for closed-loop control (that's the
+       EKF-fused /odometry/filtered); this is a reference for evaluating
+       localization error.
+       50 Hz · topic /odom/ground_truth_raw → bridged to /ground_truth/odom
+  ================================================================ -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-odometry-publisher-system"
+            name="ignition::gazebo::systems::OdometryPublisher">
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <odom_topic>/odom/ground_truth_raw</odom_topic>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <dimensions>3</dimensions>
+      <xyz_offset>0 0 0</xyz_offset>
+      <rpy_offset>0 0 0</rpy_offset>
+      <gaussian_noise>0.0</gaussian_noise>
+    </plugin>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================
+       RGB CAMERAS  (4×)
+       All cameras carry a REP-104 optical frame child link
+       (z=forward, x=right, y=down).
+
+       Heights from base_link origin:
+         Camera centre  top_z + sz/2 = 0.250 + 0.025 = 0.275 m
+  ================================================================ -->
+
+  <!-- camera1 — Front-centre: wide-angle, forward-looking.
+       Mounted on a small bracket just ahead of the chassis nose. -->
+  <xacro:sensor_cylinder name="camera1"
+    parent="imu_link"
+    x="0" y="0.6" z="-0.07"
+    roll="-0.7854" pitch="0" yaw="0"
+    r="${0.050*2}" h="${0.05}"
+    m="0.15" mat="cam_black"/>
+  <xacro:optical_frame name="camera1"/>
+
+  <!-- camera2 — Front-left: angled 30° outward for left crop-row coverage. -->
+  <xacro:sensor_cylinder name="camera2"
+    parent="imu_link"
+    x="0" y="0.3" z="-0.07"
+    roll="-0.3" pitch="0" yaw="0"
+    r="${0.050*2}" h="${0.05}"
+    m="0.15" mat="cam_black"/>
+  <xacro:optical_frame name="camera2"/>
+
+
+
+  <!-- camera3 — Front-right: angled 30° outward for right crop-row coverage. -->
+  <xacro:sensor_cylinder name="camera3"
+    parent="imu_link"
+    x="0" y="-0.3" z="-0.07"
+    roll="0.3" pitch="0" yaw="0"
+    r="${0.050*2}" h="${0.05}"
+    m="0.15" mat="cam_black"/>
+  <xacro:optical_frame name="camera3"/>
+
+    <!-- camera4 — Far-right: angled 45° outward for right crop-row coverage. -->
+  <xacro:sensor_cylinder name="camera4"
+    parent="imu_link"
+    x="0" y="-0.6" z="-0.07"
+    roll="0.7854" pitch="0" yaw="0"
+    r="${0.050*2}" h="${0.05}"
+    m="0.15" mat="cam_black"/>
+  <xacro:optical_frame name="camera4"/>
+
+
+</robot>

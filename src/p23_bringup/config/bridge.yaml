@@ -1,0 +1,118 @@
+# ros_gz_bridge configuration — Ignition Fortress ↔ ROS 2 Humble
+# Loaded by parameter_bridge in sim.launch.py
+
+# Simulation clock
+- ros_topic_name: /clock
+  gz_topic_name:  /clock
+  ros_type_name:  rosgraph_msgs/msg/Clock
+  gz_type_name:   ignition.msgs.Clock
+  direction: GZ_TO_ROS
+
+# ── IMU ──────────────────────────────────────────────────────────────
+- ros_topic_name: /imu/data
+  gz_topic_name:  /imu/data_raw
+  ros_type_name:  sensor_msgs/msg/Imu
+  gz_type_name:   ignition.msgs.IMU
+  direction: GZ_TO_ROS
+
+# ── GNSS ─────────────────────────────────────────────────────────────
+- ros_topic_name: /gnss/front/fix
+  gz_topic_name:  /gnss/front_raw
+  ros_type_name:  sensor_msgs/msg/NavSatFix
+  gz_type_name:   ignition.msgs.NavSat
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /gnss/rear/fix
+  gz_topic_name:  /gnss/rear_raw
+  ros_type_name:  sensor_msgs/msg/NavSatFix
+  gz_type_name:   ignition.msgs.NavSat
+  direction: GZ_TO_ROS
+
+# ── RGB cameras ───────────────────────────────────────────────────────
+- ros_topic_name: /camera/camera1/image_raw
+  gz_topic_name:  /camera/camera1
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   ignition.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera1/camera_info
+  gz_topic_name:  /camera/camera1/camera_info
+  ros_type_name:  sensor_msgs/msg/CameraInfo
+  gz_type_name:   ignition.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera2/image_raw
+  gz_topic_name:  /camera/camera2
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   ignition.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera2/camera_info
+  gz_topic_name:  /camera/camera2/camera_info
+  ros_type_name:  sensor_msgs/msg/CameraInfo
+  gz_type_name:   ignition.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera3/image_raw
+  gz_topic_name:  /camera/camera3
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   ignition.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera3/camera_info
+  gz_topic_name:  /camera/camera3/camera_info
+  ros_type_name:  sensor_msgs/msg/CameraInfo
+  gz_type_name:   ignition.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera4/image_raw
+  gz_topic_name:  /camera/camera4
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   ignition.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera4/camera_info
+  gz_topic_name:  /camera/camera4/camera_info
+  ros_type_name:  sensor_msgs/msg/CameraInfo
+  gz_type_name:   ignition.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+# ── IR camera ─────────────────────────────────────────────────────────
+- ros_topic_name: /camera/ir/image_raw
+  gz_topic_name:  /camera/ir
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   ignition.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/ir/camera_info
+  gz_topic_name:  /camera/ir/camera_info
+  ros_type_name:  sensor_msgs/msg/CameraInfo
+  gz_type_name:   ignition.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+# ── 3-D LiDAR ─────────────────────────────────────────────────────────
+- ros_topic_name: /lidar/points
+  gz_topic_name:  /lidar/points_raw/points
+  ros_type_name:  sensor_msgs/msg/PointCloud2
+  gz_type_name:   ignition.msgs.PointCloudPacked
+  direction: GZ_TO_ROS
+
+# ── Laser profile scanners ────────────────────────────────────────────
+- ros_topic_name: /scanner/left
+  gz_topic_name:  /scanner/left_raw
+  ros_type_name:  sensor_msgs/msg/LaserScan
+  gz_type_name:   ignition.msgs.LaserScan
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /scanner/right
+  gz_topic_name:  /scanner/right_raw
+  ros_type_name:  sensor_msgs/msg/LaserScan
+  gz_type_name:   ignition.msgs.LaserScan
+  direction: GZ_TO_ROS
+
+# ── Ground-truth odometry (OdometryPublisher, noise-free) ──────────────
+- ros_topic_name: /ground_truth/odom
+  gz_topic_name:  /odom/ground_truth_raw
+  ros_type_name:  nav_msgs/msg/Odometry
+  gz_type_name:   ignition.msgs.Odometry
+  direction: GZ_TO_ROS
